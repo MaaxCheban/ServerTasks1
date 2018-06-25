@@ -3,24 +3,20 @@ package com.epam.socket;
 import java.net.*;
 import java.io.*;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Server {
 
-    private static int port = 8080;
+    private static final int PORT = 8080;
 
     public static void main(String[] args) {
-        if (args.length != 0) {
+        int port = PORT;
+        if(args.length != 0){
             port = Integer.parseInt(args[0]);
         }
 
-        try {
-            ServerSocket ss = new ServerSocket(port);
-            Socket socket = null;
+        try ( ServerSocket ss = new ServerSocket(port)){
             System.out.println("Waiting for a client...");
             while (true) {
-                socket = ss.accept();
 
                 int id = new Random().nextInt(10000);
                 System.out.println("Got a client " + id);
@@ -29,6 +25,7 @@ public class Server {
                 File f = new File(buildFileName(id));
 
                 try (
+                        Socket socket = ss.accept();
                         InputStream sin = socket.getInputStream();
                         BufferedReader in = new BufferedReader(new InputStreamReader(sin));
                         PrintStream outputStream = new PrintStream(f)
@@ -38,7 +35,9 @@ public class Server {
                     while (true) {
                         line = in.readLine();
 
-                        if (!shouldContinue(line)) break;
+                        if (mustStop(line)) {
+                            break;
+                        }
 
                         System.out.println("Entering clients line to the file ");
                         outputStream.println(line);
@@ -46,6 +45,9 @@ public class Server {
                         System.out.println("Waiting for the next line...");
                         System.out.println();
                     }
+
+                }finally{
+                    System.out.println("Socket " + id + " is closed");
                 }
             }
         } catch (Exception e) {
@@ -55,18 +57,13 @@ public class Server {
 
 
     private static String buildFileName(int id) {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("file ");
-        stringBuffer.append(id);
-        stringBuffer.append(".txt");
-
-        return stringBuffer.toString();
+        return "file " + id + ".txt";
     }
 
-    private static boolean shouldContinue(String line) {
-        if (line == null) {
-            return false;
+    private static boolean mustStop(String line) {
+        if (line == null || line.equals("stop")) {
+            return true;
         }
-        return line.equals("stop") ? false : true;
+        return false;
     }
 }

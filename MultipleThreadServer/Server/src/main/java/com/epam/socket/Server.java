@@ -5,14 +5,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-    private static int port = 8080;
+    private static final int PORT = 8080;
 
     public static void main(String[] args)    {
-        try {
-            if(args.length != 0){
-                port = Integer.parseInt(args[0]);
-            }
-            ServerSocket ss = new ServerSocket(port);
+        int port = PORT;
+        if(args.length != 0){
+            port = Integer.parseInt(args[0]);
+        }
+
+        try (ServerSocket ss = new ServerSocket(port)){
             ExecutorService executor = Executors.newCachedThreadPool();
             System.out.println("Waiting for a client...");
 
@@ -21,7 +22,9 @@ public class Server {
                 executor.execute(new WorkerTask(socket));
             }
 
-        } catch(Exception e) { e.printStackTrace(); }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

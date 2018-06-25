@@ -9,7 +9,6 @@ public class WorkerTask implements Runnable {
 
     public WorkerTask(Socket socket) {
         this.socket = socket;
-
     }
 
     @Override
@@ -31,7 +30,9 @@ public class WorkerTask implements Runnable {
             while (true) {
                 line = in.readLine();
 
-                if (!shouldContinue(line)) break;
+                if (mustStop(line)){
+                    break;
+                }
 
                 System.out.println("Entering clients line to the file ");
                 outputStream.println(line);
@@ -40,27 +41,27 @@ public class WorkerTask implements Runnable {
                 System.out.println();
             }
 
-            socket.close();
-            System.out.println("Socket " + id + " is closed");
-
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                socket.close();
+                System.out.println("Socket " + id + " is closed");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     private static String buildFileName(int id) {
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("file ");
-        stringBuffer.append(id);
-        stringBuffer.append(".txt");
-
-        return stringBuffer.toString();
+        return "file " + id + ".txt";
     }
 
-    private static boolean shouldContinue(String line) {
-        if (line == null) {
-            return false;
+    private static boolean mustStop(String line) {
+        if (line == null || line.equals("stop")) {
+            return true;
         }
-        return line.equals("stop") ? false : true;
+        return false;
     }
 }
