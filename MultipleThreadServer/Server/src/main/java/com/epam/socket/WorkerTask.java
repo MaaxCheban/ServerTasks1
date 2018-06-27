@@ -21,8 +21,7 @@ public class WorkerTask implements Runnable {
         File f = new File(buildFileName(id));
 
         try (
-                InputStream sin = socket.getInputStream();
-                BufferedReader in = new BufferedReader(new InputStreamReader(sin));
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 PrintStream outputStream = new PrintStream(f)
         ) {
 
