@@ -20,7 +20,7 @@ public class Content extends JPanel {
     private JTextField hostField;
     private JButton sendButton;
 
-    private Content(ContentBuilder builder){
+    private Content(ContentBuilder builder) {
         super(builder.layout == null ? new FlowLayout() : builder.layout);
         statusLabel = new JLabel("Status: ");
         inputTextLabel = builder.inputTextLabel;
@@ -36,7 +36,7 @@ public class Content extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            try (Socket socket = new Socket( hostField.getText(), Integer.parseInt(portField.getText()) )){
+            try (Socket socket = new Socket(hostField.getText(), Integer.parseInt(portField.getText()))) {
                 statusLabel.setText("Status: Connected");
                 try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
                     statusLabel.setText("Status: Sending line to the server");
@@ -45,14 +45,13 @@ public class Content extends JPanel {
                     out.flush();
                 }
 
-            }catch(UnknownHostException ex){
+            } catch (UnknownHostException ex) {
                 statusLabel.setText("Status: unknown host");
                 ex.printStackTrace();
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 statusLabel.setText("Status: check text u have input again");
                 ex.printStackTrace();
-            }catch (IllegalArgumentException ex){
+            } catch (IllegalArgumentException ex) {
                 statusLabel.setText("Status: wrong host or port");
                 ex.printStackTrace();
             }
@@ -62,29 +61,29 @@ public class Content extends JPanel {
     }
 
 
-    public void init(){
+    public void init() {
 
         sendButton.addActionListener(new ConnectButtonActionListener());
-        if(inputTextLabel != null && textField != null){
+        if (inputTextLabel != null && textField != null) {
             this.add(inputTextLabel);
             this.add(textField);
         }
-        if(inputPortLabel != null && portField != null){
+        if (inputPortLabel != null && portField != null) {
             this.add(inputPortLabel);
             this.add(portField);
         }
-        if(inputHostLabel != null && hostField != null){
+        if (inputHostLabel != null && hostField != null) {
             this.add(inputHostLabel);
             this.add(hostField);
         }
-        if(sendButton != null){
+        if (sendButton != null) {
             this.add(sendButton);
         }
         this.add(statusLabel);
 
     }
 
-    public static class ContentBuilder{
+    public static class ContentBuilder {
         private JLabel inputTextLabel;
         private JLabel inputPortLabel;
         private JLabel inputHostLabel;
@@ -137,7 +136,7 @@ public class Content extends JPanel {
         }
 
 
-        public Content build(){
+        public Content build() {
             return new Content(this);
         }
     }

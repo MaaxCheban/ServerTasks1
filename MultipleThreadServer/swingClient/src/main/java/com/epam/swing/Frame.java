@@ -6,24 +6,24 @@ import java.awt.*;
 public class Frame extends JFrame {
     private JPanel content;
 
-    public Frame(){
+    public Frame() {
         this("Swing application", 950, 600, null, new GridBagLayout());
     }
 
-    public Frame(String title){
+    public Frame(String title) {
         this(title, 950, 600, null, new GridBagLayout());
     }
 
-    public Frame(String title,  int width, int height){
+    public Frame(String title, int width, int height) {
         this(title, width, height, null, new GridBagLayout());
     }
 
-    public Frame(String title,  int width, int height, Component component){
+    public Frame(String title, int width, int height, Component component) {
         this(title, width, height, component, new GridBagLayout());
         init();
     }
 
-    public Frame(String title, int width, int height, Component component, LayoutManager layout){
+    public Frame(String title, int width, int height, Component component, LayoutManager layout) {
         super.setTitle(title);
         super.setSize(width, height);
         super.setLocationRelativeTo(component);
@@ -39,7 +39,7 @@ public class Frame extends JFrame {
         this.content = content;
     }
 
-    public void init(){
+    public void init() {
         this.add(content);
     }
 }

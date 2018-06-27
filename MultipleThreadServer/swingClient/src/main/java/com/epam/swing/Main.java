@@ -14,7 +14,6 @@ public class Main {
         JLabel inputHostLabel = new JLabel("Specify host:");
 
 
-
         JTextField textField = new JTextField(15);
         JTextField portField = new JTextField(4);
         JTextField hostField = new JTextField(8);
